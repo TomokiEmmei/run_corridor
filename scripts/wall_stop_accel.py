@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import rospy, copy #copyを追加
-from pimouse_ros.msg import LightSensorvalues
+import rospy, copy 
+from pimouse_ros.msg import LightSensorValues
 from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger, TriggerResponse
 
@@ -26,8 +26,6 @@ class WallStopAccel():
 			elif data.linear < 0.1: data.linear.x = 0.1
 			elif data.linear >= 0.8: data.linear.x = 0.8
 
- if self.sensor_values.sum_all < 500	else 0.0
-
 			self.cmd_vel.publish(data)
 			rate.sleep()
 
@@ -35,6 +33,6 @@ if __name__ == '__main__':
 	rospy.init_node('wall_stop_accel')
 	rospy.wait_for_service('/motor_on')
 	rospy.wait_for_service('/motor_off')
-	rospy.on_shutdow(rospy.ServiceProxy('/motor_off', Trigger).call)
+	rospy.on_shutdown(rospy.ServiceProxy('/motor_off', Trigger).call)
 	rospy.ServiceProxy('/motor_on', Trigger).call()
 	WallStopAccel().run()
