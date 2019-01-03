@@ -17,9 +17,17 @@ class WallStopAccel():
 	def run(self):
 		rate = rospy.Rate(10)
 		data = Twist()
+		accel = 0.02
 		
 		while not rospy.is_shutdown():
-			data.linear.x = 0.2 if self.sensor_values.sum_all < 500	else 0.0
+			data.linear.x += 0.02
+
+			if self.sensor_values >= 50: data.linear.x = 0.0
+			elif data.linear < 0.1: data.linear.x = 0.1
+			elif data.linear >= 0.8: data.linear.x = 0.8
+
+ if self.sensor_values.sum_all < 500	else 0.0
+
 			self.cmd_vel.publish(data)
 			rate.sleep()
 
